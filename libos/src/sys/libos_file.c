@@ -201,8 +201,15 @@ long libos_syscall_fchmodat(int dfd, const char* filename, mode_t mode) {
             goto out_dent;
     }
 
+    uint64_t time_us;
+    if (PalSystemTimeQuery(&time_us) < 0) {
+        ret = -EPERM;
+        goto out_dent;
+    }
+
     lock(&dent->inode->lock);
     dent->inode->perm = perm;
+    dent->inode->ctime = time_us / 1000000;
     unlock(&dent->inode->lock);
 
 out_dent:
@@ -235,8 +242,15 @@ long libos_syscall_fchmod(int fd, mode_t mode) {
             goto out;
     }
 
+    uint64_t time_us;
+    if (PalSystemTimeQuery(&time_us) < 0) {
+        ret = -EPERM;
+        goto out;
+    }
+
     lock(&hdl->inode->lock);
     hdl->inode->perm = perm;
+    hdl->inode->ctime = time_us / 1000000;
     unlock(&hdl->inode->lock);
 
 out:
