@@ -201,6 +201,7 @@ long libos_syscall_fchmodat(int dfd, const char* filename, mode_t mode) {
             goto out_dent;
     }
 
+    log_warning(" *** fchmodat(\"%s\") updating ctime", dent->name);
     uint64_t time_us;
     if (PalSystemTimeQuery(&time_us) < 0) {
         ret = -EPERM;
@@ -242,6 +243,7 @@ long libos_syscall_fchmod(int fd, mode_t mode) {
             goto out;
     }
 
+    log_warning(" *** fchmod(\"%d\") updating ctime", fd);
     uint64_t time_us;
     if (PalSystemTimeQuery(&time_us) < 0) {
         ret = -EPERM;

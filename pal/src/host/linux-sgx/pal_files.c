@@ -105,6 +105,7 @@ static int file_open(PAL_HANDLE* handle, const char* type, const char* uri,
         return 0;
     }
 
+    log_warning(" *** file_open(\"%s\") - trusted or allowed file", hdl->file.realpath);
     assert(tf); /* at this point, we want to open a trusted or allowed file */
 
     if (!tf->allowed && (do_create

@@ -30,6 +30,7 @@ static int do_stat(struct libos_dentry* dent, struct stat* stat) {
 
     /* Update `st_ino` from dentry */
     stat->st_ino = dentry_ino(dent);
+    log_warning(" *** do_stat(\"%s\") - ctime: %d (ns: %d)", dent->name, stat->st_ctime, stat->st_ctime_nsec);
     return 0;
 }
 
@@ -44,8 +45,12 @@ static int do_hstat(struct libos_handle* hdl, struct stat* stat) {
         return ret;
 
     /* Update `st_ino` from dentry */
-    if (hdl->dentry)
+    if (hdl->dentry) {
         stat->st_ino = dentry_ino(hdl->dentry);
+        log_warning(" *** do_hstat(\"%s\") - ctime: %d (ns: %d)", hdl->dentry->name, stat->st_ctime, stat->st_ctime_nsec);
+    } else {
+        log_warning(" *** do_hstat(\"...\") - ctime: %d (ns: %d)", stat->st_ctime, stat->st_ctime_nsec);
+    }
 
     return 0;
 }
